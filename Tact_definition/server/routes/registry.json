@@ -1,0 +1,22 @@
+{
+    "services": {
+        "audio-parser": {
+            "apiName": "audio-parser",
+            "host": "https://localhost",
+            "port": "5001",
+            "url": "https://localhost:5001/"
+        },
+        "test-recipient": {
+            "apiName": "test-recipient",
+            "host": "https://localhost",
+            "port": "7000",
+            "url": "https://localhost:7000/"
+        },
+        "react-client": {
+            "apiName": "react-client",
+            "host": "https://localhost",
+            "port": "3000",
+            "url": "https://localhost:3000/"
+        }
+    }
+}

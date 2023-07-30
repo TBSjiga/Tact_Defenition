@@ -1,0 +1,135 @@
+.App {
+  text-align: center;
+  margin: 0rem auto;
+  padding-top: 0rem;
+}
+
+.App-logo {
+  height: 4vmin;
+  pointer-events: none;
+  margin-bottom: 0rem auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #30343e;
+  min-height: 100vh;
+  display: flex;
+  margin: 0rem auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  color: white;
+}
+
+.AudioRec {
+  padding-top: 0rem;
+  margin: 0rem auto;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.file-upload {
+  /* box-shadow: 2px 2px 2px 2px #ccc; */
+  padding: 2rem;
+  padding-top: 0rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+input , div , button, label{
+  margin-top: 1rem;
+
+  text-align: center;
+
+  margin: 1rem auto;
+}
+
+.upbutton {
+   width: 15rem;
+   padding: .5rem;
+   background-color: #2767e9;
+   color: aliceblue;
+   font-size: 1.2rem;
+   cursor: pointer;
+}
+
+.parameters {
+  box-sizing: border-box;
+  padding: 1rem;
+  padding-bottom: 0rem;
+  padding-top: 0rem;
+  border: 4px solid aliceblue;
+  margin: 0rem auto;
+  margin-top: .5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.chk {
+  padding: 0rem;
+  margin: .1rem auto;
+}
+
+#url {
+  width: 20rem;
+  height: .7rem;
+  padding: .5rem;
+  background-color: aliceblue;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#checkInput {
+  margin: .5rem auto;
+  zoom: 1.5;
+}
+
+p {
+  margin: 0rem auto;
+  font-size: 1rem;
+}
+
+#error {
+  color: #2767e9;
+}
+
+.description {
+  font-size: 0.8rem;
+  margin: .3rem auto;
+}
+
+.audio-container {
+  padding: 0rem;
+  margin: 0rem auto;
+}
+
+.audio-controls {
+  padding-top: 0rem;
+  margin: 0rem auto;
+}
+
+#name {
+  margin-top: 0rem auto;
+  color: #2767e9;
+}
