@@ -1,3 +1,6 @@
+// audioParser.js
+// анализатор аудио
+
 //--------------------ИМПОРТ-ЗАВИСИМОСТЕЙ----------------------------------------------------------------------------
 
 // https сервер
@@ -45,7 +48,7 @@ const baseURL = 'https://localhost:5000';
 //--------------------ОБРАБОТКА-ЗАПРОСА------------------------------------------------------------------------------
 
 
-// функция поиска bpm, тактовых импульсов и (опционально) тактовых интервалов
+// функция поиска bpm, тактовых импульсов и (опционально) тактоого интервала
 // запускает python-скрипт, находящий с помощью библиотеки essentail на c++ 
 // параметры аудио-файла .mp3
 // если нужно найти тактовые импульсы, то добавляем параметр -i
@@ -56,72 +59,81 @@ app.post("/upload-audio", (request, response) => {
  
     // загрузка всех чанков в буфер
     let data = Buffer.from('');
-    
+
     request.on('data', (chunk) => {
         data = Buffer.concat([data, chunk]);
     });
 
-
-    // когда ответ полностью получен
-    request.on('end', () => {
-
-        // записываем буфер в файл .webm и сохраняем его имя
-        let fileName = bufferToFile(data);
-
-        // записываем значение чекбокса на отправку тактового интервала
-        let check = request.headers.checked;
-
-        // записываем значение URL
-        let inputURL = request.headers.inputurl;
-
-
-        console.log("check:");
-        console.log(check);
+    if (data == undefined || data == null){
+        response.send({data: new Date() + ": <Audio-Parser> No data!"});
+    }else{
         
-        if (check == "true") 
-            var tInterval = '-i';
-        else 
-            var tInterval = '';
+        // когда ответ полностью получен
+        request.on('end', () => {
 
+            // записываем буфер в файл .webm и сохраняем его имя
+            let fileName = bufferToFile(data);
 
-        // строка запуска скрипта
-        scriptRun = `python3 bpmTracker.py -f ${fileName} ${tInterval}`
+            // записываем значение чекбокса на отправку тактового интервала
+            let check = request.headers.checked;
 
-        console.log("scriptRun:");
-        console.log(scriptRun);
+            // записываем значение URL
+            let inputURL = request.headers.inputurl;
 
-
-        // синхронный вызов дочернего процесса с запуском скрипта
-        // перехватывает вывод из оболочки и сохраняет его в child
-        const execSync = require('child_process').execSync;
-        var child = execSync(`${scriptRun}`, (error, stdout, stderr) => {
-
-            if (error) {
-                console.error(`exec error: ${error}`);
-                return;
-            }else{
+            console.log(new Date())
+            console.log("check:");
+            console.log(check);
             
-                var fileBeatName = stdout;
+            if (check == "true") 
+                var tInterval = '-i';
+            else 
+                var tInterval = '';
 
-                console.log(`stdout: ${stdout}`);
-                console.error(`stderr: ${stderr}`);
 
-                return fileBeatName;
+            // строка запуска скрипта
+            scriptRun = `python3 bpmTracker.py -f ${fileName} ${tInterval}`
+
+            console.log(new Date())
+            console.log("scriptRun:");
+            console.log(scriptRun);
+
+
+            // синхронный вызов дочернего процесса с запуском скрипта
+            // перехватывает вывод из оболочки и сохраняет его в child
+            const execSync = require('child_process').execSync;
+            var child = execSync(`${scriptRun}`, (error, stdout, stderr) => {
+
+                if (error) {
+                    console.error(`exec error: ${error}`);
+                    return;
+                }else{
+                
+                    var fileBeatName = stdout;
+
+                    console.log(`stdout: ${stdout}`);
+                    console.error(`stderr: ${stderr}`);
+
+                    return fileBeatName;
+                }
+            });
+
+
+            // получение результата
+            var result = child.buffer;
+
+            if (result == undefined || result == null){
+                // отправка ответа
+                response.send({data: new Date() + ": <Audio-Parser> No data!"});
+                return;
             }
+
+            // отправка ответа
+            response.send({data: new Date() + ": <Audio-Parser> Data for analysis sent"});
+
+            //отправлка результата на введенный URL
+            sendResult(result, inputURL)
         });
-
-
-        // отправка ответа
-        response.send({
-            data: "Data for analysis sent"
-        });
-
-        // получение результата
-        var result = child.buffer;
-
-        //отправлка результата на введенный URL
-        sendResult(result, inputURL)
-    });
+    }
 }); 
 
 
@@ -133,17 +145,19 @@ app.post("/upload-audio", (request, response) => {
 // функция записи буфера в файл
 function bufferToFile(buffer){
   
+    console.log(new Date())
+    console.log("buffer:");
     console.log(buffer);
 
     let dateFileName = Date.now() + ".webm"
     fs.writeFileSync(__dirname + "/uploads/" + dateFileName, buffer, function(err) {
         if(err) {
             console.log(err);
+            return;
         } else {
             console.log("The file was saved!");
         }
     });
-    console.log("The file was saved!");
 
     return dateFileName;
 
@@ -158,6 +172,8 @@ function bufferToFile(buffer){
 // асинхронная функция отправки результата анализа на заданный URL
 async function sendResult(result, url){
 
+    console.log(new Date())
+    console.log("result:");
     console.log(result);
 
     // установка кастомных заголовков
@@ -177,7 +193,8 @@ async function sendResult(result, url){
     const response = await fetch(baseURL + "/test-recipient/upload-result", requestOptions)
     .catch((error) => {
         console.error('Error:', error);
-        console.log("server is down!!"); 
+        console.log(new Date())
+        console.log("Server is down!!"); 
     })
 
     
@@ -187,6 +204,7 @@ async function sendResult(result, url){
     console.log(new Date());
     console.log("response:");
     console.log(data);
+
 }
  
 

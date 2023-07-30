@@ -57,18 +57,23 @@ app.post("/", (request, response) => {
         data = Buffer.concat([data, chunk]);
     });
 
+    if (data == undefined || data == null){
+        response.send({data: new Date() + ": <Test_recipient> No data!"});
+        return;  
+    }
+
     // когда ответ полностью получен
     request.on('end', () => {
         
         // преобразуем ответ в json
         const result = new TextDecoder("utf-8").decode(new Uint8Array(data));;
-        console.log(result);
+        //console.log(result);
         var resultJson = JSON.stringify(eval("(" + result + ")"));
-        console.log(resultJson);
+        //console.log(resultJson);
 
         // вывод в удобном для просмотра формате
         console.log("data: \nbpm -- bits per second, \nbeats -- list of bit locations in seconds, \nintervals -- interval between bits in seconds.");
-        console.log(typeof(resultJson));
+        //console.log(typeof(resultJson));
         console.log(JSON.parse(resultJson));
         
         // отправка ответа

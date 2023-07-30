@@ -4,7 +4,7 @@
 //--------------------ИМПОРТ-ЗАВИСИМОСТЕЙ----------------------------------------------------------------------------
 
 
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import logo from './logo.svg';
 
 // окно ошибки
@@ -30,16 +30,19 @@ function AudioRecord() {
     const mimeType = "audio/webm";
 
     //const [result, setResult] = useState("Записи нет") // результат действия
-    const [checkSendInterval, setCheckSendInterval] = useState(false); // чекбокс на отправку интервала
+    const [checkSendInterval, setCheckSendInterval] = useState(false); // чекбокс на отправку интервала (false, true)
     const [inputURL, setInputURL] = useState(""); // инпут URL
-    const [permission, setPermission] = useState(false); // разрешение на использование микро
+    const [permission, setPermission] = useState(false); // разрешение на использование микро (false, true)
     const [stream, setStream] = useState(null); // звковой поток
     const mediaRecorder = useRef(null); // держит данные от создания нового объекта медиа энкодера
     const [recordingStatus, setRecordingStatus] = useState("inactive"); // статус записи (recording, inactive)
     const [audioChunks, setAudioChunks] = useState([]); // аудио чанки (куски потока)
     const [audioWebm, setAudioWebm] = useState(null); // аудио webm
     //const [audio, setAudio] = useState(null); // аудио (содержит блоб юрл готовой записи)
-    const [modalActive, setModalActive] = useState(false); // состояние модального окна ошибки
+    const [modalActive, setModalActive] = useState(false); // состояние модального окна ошибки (false, true)
+    const [ seconds, setSeconds ] = useState(0); // секунды таймера
+    const [ timerActive, setTimerActive ] = useState(false); // состояние таймера (false, true)
+
 
     // регулярное выражение для проверки URL
     const urlPattern = new RegExp(/((http|https|ftp):\/\/)*([a-zA-Z0-9:]*)/g);
@@ -80,12 +83,38 @@ function AudioRecord() {
 
 
 
+
+    //-----------------ТАЙМЕР--------------------------------------------------------------------------------------
+
+
+
+    useEffect(() => {
+        if (seconds < 60 && timerActive == true) {
+          setTimeout(setSeconds, 1000, seconds + 1);
+        } else if (recordingStatus == "recording"){
+            stopRecording();
+            setTimerActive(false);
+        }else{
+            setTimerActive(false);
+        }
+    }, [ seconds, timerActive ]);
+
+
+    
+
+
+
+
 //--------------------ЗАПИСЬ-ЗВУКА---------------------------------------------------------------------------------
 
 
     // функция начала записи
     const startRecording = async () => {
+        
         setRecordingStatus("recording");
+        setTimerActive(true);
+        setSeconds(0);
+        setAudioWebm(null);
 
         // создание нового MediaRecorder для записи стрима
         const media = new MediaRecorder(stream, { type: mimeType });
@@ -117,8 +146,11 @@ function AudioRecord() {
 
     // функция окончания записи
     const stopRecording = () => {
+        
+        setTimerActive(false);
+        setSeconds(0);
         setRecordingStatus("inactive");
-
+        
         // окончание записи 
         mediaRecorder.current.stop();
 
@@ -128,6 +160,7 @@ function AudioRecord() {
             // создание блоба из сохраненных аудиочанков
             const audioBlob = new Blob(audioChunks, { type: mimeType });
 
+            console.log(new Date());
             console.log("audioBlob:");
             console.log(audioBlob);
 
@@ -140,6 +173,7 @@ function AudioRecord() {
 
             // обнуляем аудио чанки для новой записи
             setAudioChunks([]);
+
         };
     };
 
@@ -154,35 +188,39 @@ function AudioRecord() {
 
         if (!urlPattern.test(inputURL) == true){
             setModalActive(true);
-        }else{
-            
-            // установка кастомных заголовков
-            const myHeaders = new Headers();
-            myHeaders.append("checked", `${checkSendInterval}`);
-            myHeaders.append("inputurl", `${inputURL}`);
-
-            // параметры запроса
-            const requestOptions = {
-                method: 'POST',
-                body: audioWebm,
-                headers: myHeaders
-            };
-
-            // fetch post запрос серверу анализа аудио-данных с записанным буфером
-            const response = await fetch(baseURL + '/audio-parser/upload-audio', requestOptions)
-            .catch((error) => {
-                console.error('Error:', error);
-                console.log("server is down!!")   
-            });
-            
-            //ожидание ответа
-            const {headers, data} = await response.json();
-            
-            console.log(new Date());
-            console.log("data:");
-            console.log(data);
-
+            return;
         }
+            
+        // установка кастомных заголовков
+        const myHeaders = new Headers();
+        myHeaders.append("checked", `${checkSendInterval}`);
+        myHeaders.append("inputurl", `${inputURL}`);
+
+        var popp = undefined;
+
+        console.log("audioWebm:");
+        console.log(audioWebm);
+        // параметры запроса
+        const requestOptions = {
+            method: 'POST',
+            body: audioWebm,
+            headers: myHeaders
+        };
+
+        // fetch post запрос серверу анализа аудио-данных с записанным буфером
+        const response = await fetch(baseURL + '/audio-parser/upload-audio', requestOptions)
+        .catch((error) => {
+            console.error('Error:', error);
+            console.log(new Date());
+            console.log("Server is down!!");
+        });
+        
+        //ожидание ответа
+        const {headers, data} = await response.json();
+        
+        console.log(new Date());
+        console.log("data:");
+        console.log(data);
         
     }
 
@@ -212,10 +250,10 @@ function AudioRecord() {
                 </p>
 
                 <p className='description'>Ограничения.<br></br>
-                Поддерживаемые браузеры: Chrome, Opera, Edge.<br></br>
+                    Поддерживаемые браузеры: Chrome, Opera, Edge.<br></br>
                     Качество работы сервиса на остальных браузерах не гарантируется.<br></br>
                     Запись ведется с частотой 44.1 kHz для лучшей работы анализатора.<br></br>
-                    Рекомендуемое время записи - от 15 секунд до 5 минут.<br></br>
+                    Рекомендуемое время записи - от 15 секунд до 60 секунд.<br></br>
                     Чем дольше запиь звука, тем лучше выборка, тем лучше результат.<br></br>
                     Результат будет лучше там, где такт определяется битом или басом.<br></br>
                     Качество результата не гарантируется в сложных композициях.<br></br>
@@ -280,6 +318,7 @@ function AudioRecord() {
                             Закончить запись
                         </button>
                         <p>{recordingStatus}</p>
+                        <p>{seconds}</p>
                         <img src={logo} className="App-logo" alt="logo" />
                     </>
                     
