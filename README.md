@@ -22,6 +22,11 @@
 Результат будет лучше там, где такт определяется битом или басом.
 Качество результата не гарантируется в сложных композициях.
 
+## Структура сервиса
+
+![Tact_Defenition drawio](https://github.com/TBSjiga/Tact_Defenition/assets/31573154/bc41dbd9-f757-42b0-b156-f3ae1ec8b51b)
+
+
 ## Демонстрация работы сервиса
 
 https://github.com/TBSjiga/Tact_Defenition/assets/31573154/8b2becd9-1212-4b80-86b6-88470207ac4b
@@ -33,6 +38,5 @@ https://github.com/TBSjiga/Tact_Defenition/assets/31573154/8b2becd9-1212-4b80-86
 - NodeJS
 - Express
 - Essenia
-- HTTPS
 - Python
 - C++
