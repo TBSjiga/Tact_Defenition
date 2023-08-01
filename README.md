@@ -38,6 +38,7 @@ https://github.com/TBSjiga/Tact_Defenition/assets/31573154/8b2becd9-1212-4b80-86
 - JavaScript
 - NodeJS
 - Express
+- React
 - Essentia
 - Python
 - C++
