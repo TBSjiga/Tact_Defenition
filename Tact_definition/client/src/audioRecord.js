@@ -44,8 +44,9 @@ function AudioRecord() {
     const [ timerActive, setTimerActive ] = useState(false); // состояние таймера (false, true)
 
 
+    
     // регулярное выражение для проверки URL
-    const urlPattern = new RegExp(/((http|https|ftp):\/\/)*([a-zA-Z0-9:]*)/g);
+    const urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
 
     // сохранение записанного input
     const inputChange = event => {
@@ -186,7 +187,7 @@ function AudioRecord() {
     // обработка кнопки отправки записи на сервер апи
     async function sendFile(){
 
-        if (!urlPattern.test(inputURL) == true){
+        if (urlPattern.test(inputURL) == false){
             setModalActive(true);
             return;
         }
@@ -196,10 +197,9 @@ function AudioRecord() {
         myHeaders.append("checked", `${checkSendInterval}`);
         myHeaders.append("inputurl", `${inputURL}`);
 
-        var popp = undefined;
-
         console.log("audioWebm:");
         console.log(audioWebm);
+        
         // параметры запроса
         const requestOptions = {
             method: 'POST',
@@ -216,12 +216,17 @@ function AudioRecord() {
         });
         
         //ожидание ответа
-        const {headers, data} = await response.json();
-        
-        console.log(new Date());
-        console.log("data:");
-        console.log(data);
-        
+        try{
+
+            let {headers, data} = await response.json();
+            console.log(new Date());
+            console.log("Response:");
+            console.log(data);
+
+        }catch{
+            console.log("No response");
+        }
+
     }
 
 
@@ -249,7 +254,7 @@ function AudioRecord() {
                     6. Получение данных о такте музыки по заданному URL.<br></br>
                 </p>
 
-                <p className='description'>Ограничения.<br></br>
+                <p className='description'>Ограничения:<br></br>
                     Поддерживаемые браузеры: Chrome, Opera, Edge.<br></br>
                     Качество работы сервиса на остальных браузерах не гарантируется.<br></br>
                     Запись ведется с частотой 44.1 kHz для лучшей работы анализатора.<br></br>

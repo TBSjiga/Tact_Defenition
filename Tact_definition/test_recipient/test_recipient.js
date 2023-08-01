@@ -66,13 +66,14 @@ app.post("/", (request, response) => {
     request.on('end', () => {
         
         // преобразуем ответ в json
-        const result = new TextDecoder("utf-8").decode(new Uint8Array(data));;
+        const result = new TextDecoder("utf-8").decode(new Uint8Array(data));
+        
         //console.log(result);
         var resultJson = JSON.stringify(eval("(" + result + ")"));
         //console.log(resultJson);
 
         // вывод в удобном для просмотра формате
-        console.log("data: \nbpm -- bits per second, \nbeats -- list of bit locations in seconds, \nintervals -- interval between bits in seconds.");
+        console.log("data: \nbpm -- bits per second, \nbeats -- list of bit locations in seconds, \ninterval -- interval between bits in seconds.");
         //console.log(typeof(resultJson));
         console.log(JSON.parse(resultJson));
         

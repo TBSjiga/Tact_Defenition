@@ -87,11 +87,17 @@ async function uploadData(body, req) {
             console.log("server is down!!"); 
         })
 
-        const {headers, data} = await response.json();
+        //ожидание ответа
+        try{
 
-        console.log(new Date());
-        console.log("data:");
-        console.log(data);
+            let {headers, data} = await response.json();
+            console.log(new Date());
+            console.log("Response:");
+            console.log(data);
+
+        }catch{
+            console.log("No response");
+        }
 
     }else{
         res.send("API Name doesn't exist.");

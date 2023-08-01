@@ -199,11 +199,16 @@ async function sendResult(result, url){
 
     
     //ожидание ответа
-    const {data} = await response.json();
+    try{
 
-    console.log(new Date());
-    console.log("response:");
-    console.log(data);
+        let {headers, data} = await response.json();
+        console.log(new Date());
+        console.log("Response:");
+        console.log(data);
+
+    }catch{
+        console.log("No response");
+    }
 
 }
  
