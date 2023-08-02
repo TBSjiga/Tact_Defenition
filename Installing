@@ -1,0 +1,15 @@
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ВАЖНО!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# Для анализа записанного звука используется библиотека essentia. Ее установка описана на их офф. сайте: 
+# https://essentia.upf.edu/installing.html
+# Или pip install essentia
+
+# Так как essentia не поддерживает формат webm, а браузеры записывают звук только в этом формате, 
+# то также используется конвертер FFmpeg для преобразования из webm в mp3.
+# Установка FFmpeg описана на их офф. сайте:
+# https://ffmpeg.org/download.html
+
+# Так как весь функционал библиотеки FFmpeg не нужен, для экономии места на диске при конфигурации были прописаны такие параметры:
+# --disable-everything --disable-network --disable-autodetect --enable-small --enable-protocol='file,pipe' 
+# --enable-demuxer=matroska --enable-muxer=mp3 --enable-decoder='vorbis,opus' --enable-encoder=libmp3lame --enable-libmp3lame 
+# --extra-ldflags=-L/usr/local/lib --extra-cflags=-I/usr/local/include --enable-filter=aresample
