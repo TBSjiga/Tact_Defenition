@@ -1,5 +1,24 @@
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ВАЖНО!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+# Установка библиотек для NodeJS
+
+# npm install express
+# npm install cors 
+# npm install fs
+# npm install https
+# npm install nodemon
+# npm install body-parser
+# npm install react
+
+
+# Установка библиотек для Python
+
+pip install numpy
+pip install argparse
+pip install essentia
+pip install json-encoder
+pip install numpy
+
 # Для анализа записанного звука используется библиотека essentia. Ее установка описана на их офф. сайте: 
 # https://essentia.upf.edu/installing.html
 # Или pip install essentia
@@ -10,6 +29,6 @@
 # https://ffmpeg.org/download.html
 
 # Так как весь функционал библиотеки FFmpeg не нужен, для экономии места на диске при конфигурации были прописаны такие параметры:
-# --disable-everything --disable-network --disable-autodetect --enable-small --enable-protocol='file,pipe' 
+# ./configure --disable-everything --disable-network --disable-autodetect --enable-small --enable-protocol='file,pipe' 
 # --enable-demuxer=matroska --enable-muxer=mp3 --enable-decoder='vorbis,opus' --enable-encoder=libmp3lame --enable-libmp3lame 
 # --extra-ldflags=-L/usr/local/lib --extra-cflags=-I/usr/local/include --enable-filter=aresample
