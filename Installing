@@ -13,11 +13,11 @@
 
 # Установка библиотек для Python
 
-pip install numpy
-pip install argparse
-pip install essentia
-pip install json-encoder
-pip install numpy
+#pip install numpy
+#pip install argparse
+#pip install essentia
+#pip install json-encoder
+#pip install numpy
 
 # Для анализа записанного звука используется библиотека essentia. Ее установка описана на их офф. сайте: 
 # https://essentia.upf.edu/installing.html
